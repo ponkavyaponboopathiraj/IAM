@@ -1,5 +1,7 @@
 package IAM.IAM.repository;
+
 import IAM.IAM.entity.User;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
