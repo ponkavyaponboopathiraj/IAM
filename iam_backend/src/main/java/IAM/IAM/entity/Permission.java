@@ -2,9 +2,10 @@ package IAM.IAM.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "permissions")
@@ -25,9 +26,24 @@ public class Permission {
     @Column(length = 255)
     private String description;
 
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @ManyToMany(mappedBy = "permissions")
+    @Builder.Default
+    private Set<Role> roles = new HashSet<>();
+
     @PrePersist
     protected void onCreate() {
         LocalDateTime now = LocalDateTime.now();
+
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
+
         createdAt = now;
         updatedAt = now;
     }
@@ -36,14 +52,4 @@ public class Permission {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
-    @ManyToMany(mappedBy = "permissions")
-@Builder.Default
-private Set<Role> roles = new HashSet<>();
 }

@@ -1,9 +1,11 @@
 package IAM.IAM.entity;
+
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -36,18 +38,22 @@ public class User {
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean enabled = true;
 
+    @Builder.Default
     @Column(name = "email_verified", nullable = false)
     private Boolean emailVerified = false;
 
+    @Builder.Default
     @Column(name = "account_locked", nullable = false)
     private Boolean accountLocked = false;
 
     @Column(name = "account_locked_until")
     private LocalDateTime accountLockedUntil;
 
+    @Builder.Default
     @Column(name = "failed_login_attempts", nullable = false)
     private Integer failedLoginAttempts = 0;
 
@@ -63,19 +69,39 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    
-@ManyToMany(fetch = FetchType.EAGER)
-@JoinTable(
-    name = "user_roles",
-    joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "role_id")
-)
-@Builder.Default
-private Set<Role> roles = new HashSet<>();
+    @Builder.Default
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {
         LocalDateTime now = LocalDateTime.now();
+
+        if (enabled == null) {
+            enabled = true;
+        }
+
+        if (emailVerified == null) {
+            emailVerified = false;
+        }
+
+        if (accountLocked == null) {
+            accountLocked = false;
+        }
+
+        if (failedLoginAttempts == null) {
+            failedLoginAttempts = 0;
+        }
+
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
+
         createdAt = now;
         updatedAt = now;
     }
