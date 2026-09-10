@@ -2,7 +2,8 @@ package IAM.IAM.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import java.util.HashSet;
+import java.util.Set;
 import java.time.LocalDateTime;
 
 @Entity
@@ -41,4 +42,8 @@ public class Permission {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @ManyToMany(mappedBy = "permissions")
+@Builder.Default
+private Set<Role> roles = new HashSet<>();
 }

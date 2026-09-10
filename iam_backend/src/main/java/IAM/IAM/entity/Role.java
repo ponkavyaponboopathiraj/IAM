@@ -1,7 +1,8 @@
 package IAM.IAM.entity;
 import jakarta.persistence.*;
 import lombok.*;
-
+import java.util.HashSet;
+import java.util.Set;
 import java.time.LocalDateTime;
 
 @Entity
@@ -40,4 +41,17 @@ public class Role {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+    @ManyToMany(mappedBy = "roles")
+@Builder.Default
+private Set<User> users = new HashSet<>(); 
+
+@ManyToMany(fetch = FetchType.EAGER)
+@JoinTable(
+    name = "role_permissions",
+    joinColumns = @JoinColumn(name = "role_id"),
+    inverseJoinColumns = @JoinColumn(name = "permission_id")
+)
+@Builder.Default
+private Set<Permission> permissions = new HashSet<>();
+
 }
