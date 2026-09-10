@@ -18,12 +18,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
+    public ResponseEntity<String> register(@RequestBody User user) {
 
-        User registeredUser = userService.registerUser(user);
+        userService.registerUser(user);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(registeredUser);
+                .body("User registered successfully");
     }
 }

@@ -1,13 +1,12 @@
-package com.server.IAM;
+package IAM.IAM;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class IamApplicationTests 
-{
+class IamApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void contextLoads() {
+    }
 }
