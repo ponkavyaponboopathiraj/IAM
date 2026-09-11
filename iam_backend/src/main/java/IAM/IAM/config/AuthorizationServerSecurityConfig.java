@@ -4,9 +4,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
+import org.springframework.http.MediaType;
+
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
 @Configuration
 public class AuthorizationServerSecurityConfig {
@@ -17,20 +22,28 @@ public class AuthorizationServerSecurityConfig {
             HttpSecurity http) throws Exception {
 
         http
-            .oauth2AuthorizationServer(authorizationServer ->
+            .oauth2AuthorizationServer(authorizationServer -> {
+
+                http.securityMatcher(
+                    authorizationServer.getEndpointsMatcher()
+                );
+
                 authorizationServer
-                    .oidc(Customizer.withDefaults())
-            )
+                    .oidc(Customizer.withDefaults());
+            })
+
             .authorizeHttpRequests(authorize ->
                 authorize
                     .anyRequest()
                     .authenticated()
             )
+
             .exceptionHandling(exceptions ->
                 exceptions
-                    .authenticationEntryPoint(
-                        new org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint(
-                            "/login"
+                    .defaultAuthenticationEntryPointFor(
+                        new LoginUrlAuthenticationEntryPoint("/login"),
+                        new MediaTypeRequestMatcher(
+                            MediaType.TEXT_HTML
                         )
                     )
             );
